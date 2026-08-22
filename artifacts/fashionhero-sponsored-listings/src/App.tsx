@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, ArrowRight, BarChart3, Check, ChevronRight, CircleHelp, CreditCard, Eye, Info, LayoutGrid, Megaphone, PackageCheck, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BarChart3, Check, ChevronRight, CircleHelp, CreditCard, Eye, Info, LayoutGrid, Megaphone, PackageCheck, Sparkles, TrendingUp } from 'lucide-react';
 
 type Product = {
   id: string;
@@ -19,15 +19,15 @@ type PromotionEvent = {
 };
 
 const products: Product[] = [
-  { id: 'linen-shirt', name: 'Linen blend shirt', category: 'Women · Shirts', detail: 'Stone · Size S–XL', position: 18, art: 'one' },
-  { id: 'city-coat', name: 'City wool coat', category: 'Women · Coats', detail: 'Navy · Size XS–L', position: 32, art: 'two' },
-  { id: 'silk-skirt', name: 'Bias cut silk skirt', category: 'Women · Skirts', detail: 'Rust · Size XS–XL', position: 27, art: 'three' },
-  { id: 'everyday-knit', name: 'Everyday knit cardigan', category: 'Women · Knitwear', detail: 'Oat · Size S–XXL', position: 39, art: 'four' },
+  { id: 'linen-shirt', name: 'Lniana koszula', category: 'Damskie · Koszule', detail: 'Kamień · Rozmiar S–XL', position: 18, art: 'one' },
+  { id: 'city-coat', name: 'Wełniany płaszcz City', category: 'Damskie · Płaszcze', detail: 'Granat · Rozmiar XS–L', position: 32, art: 'two' },
+  { id: 'silk-skirt', name: 'Jedwabna spódnica Bias', category: 'Damskie · Spódnice', detail: 'Rdzawy · Rozmiar XS–XL', position: 27, art: 'three' },
+  { id: 'everyday-knit', name: 'Dzianinowy kardigan Everyday', category: 'Damskie · Dzianiny', detail: 'Owsiany · Rozmiar S–XXL', position: 39, art: 'four' },
 ];
 const packages: Package[] = [
-  { days: 3, price: 29, label: 'Quick test' },
-  { days: 7, price: 59, label: 'Best balance' },
-  { days: 14, price: 99, label: 'Full runway' },
+  { days: 3, price: 29, label: 'Szybki test' },
+  { days: 7, price: 59, label: 'Najlepszy wybór' },
+  { days: 14, price: 99, label: 'Pełna widoczność' },
 ];
 const storageKey = 'fashionhero-promotion-events';
 
@@ -40,10 +40,11 @@ function readEvents(): PromotionEvent[] {
 
 function App() {
   const [view, setView] = useState<'products' | 'history'>('products');
+  const [productTab, setProductTab] = useState<'active' | 'promoted'>('active');
   const [events, setEvents] = useState<PromotionEvent[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedPackage, setSelectedPackage] = useState<Package>(packages[1]);
-  const [step, setStep] = useState<'catalog' | 'package' | 'confirmation'>('catalog');
+  const [step, setStep] = useState<'catalog' | 'package' | 'confirmation' | 'performance'>('catalog');
   const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => setEvents(readEvents()), []);
@@ -56,6 +57,7 @@ function App() {
     setStep('package');
   };
   const goCatalog = () => { setSelectedProduct(null); setStep('catalog'); setView('products'); };
+  const openPerformance = (product: Product) => { setSelectedProduct(product); setStep('performance'); };
   const purchase = () => {
     if (!selectedProduct) return;
     setIsSaving(true);
@@ -79,45 +81,53 @@ function App() {
     <div className="app-shell">
       <aside className="side-rail">
         <div className="brand"><div className="brand-mark">FH</div><div className="brand-word">fashion<span>hero</span></div></div>
-        <div className="rail-label">Seller workspace</div>
-        <nav className="rail-nav" aria-label="Seller workspace navigation">
-          <button className={view === 'products' ? 'active' : ''} onClick={() => { setView('products'); setStep('catalog'); setSelectedProduct(null); }} data-testid="button-nav-products"><LayoutGrid size={16} /> Products</button>
-          <button className={view === 'history' ? 'active' : ''} onClick={() => { setView('history'); setStep('catalog'); setSelectedProduct(null); }} data-testid="button-nav-history"><BarChart3 size={16} /> Promotion history</button>
+        <div className="rail-label">Panel sprzedawcy</div>
+        <nav className="rail-nav" aria-label="Nawigacja panelu sprzedawcy">
+          <button className={view === 'products' ? 'active' : ''} onClick={() => { setView('products'); setStep('catalog'); setSelectedProduct(null); }} data-testid="button-nav-products"><LayoutGrid size={16} /> Produkty</button>
+          <button className={view === 'history' ? 'active' : ''} onClick={() => { setView('history'); setStep('catalog'); setSelectedProduct(null); }} data-testid="button-nav-history"><BarChart3 size={16} /> Historia promocji</button>
         </nav>
-        <div className="rail-note"><strong>Visibility, clarified</strong><p>See a realistic upside before you decide to promote.</p></div>
-        <div className="user-chip"><div className="avatar">KN</div><div><strong>Kamil Nowak</strong><span>Seller account</span></div></div>
+        <div className="rail-note"><strong>Widoczność bez zgadywania</strong><p>Zobacz możliwy efekt, zanim wypromujesz produkt.</p></div>
+        <div className="user-chip"><div className="avatar">KN</div><div><strong>Kamil Nowak</strong><span>Konto sprzedawcy</span></div></div>
       </aside>
       <main className="main-area">
         <header className="topbar">
           <div className="mobile-brand"><div className="brand-mark">FH</div> fashionhero</div>
-          <div className="crumb"><span>Seller workspace</span><ChevronRight size={13} /><strong>{step === 'catalog' ? view === 'products' ? 'Products' : 'Promotion history' : step === 'package' ? 'Promote product' : 'Promotion confirmed'}</strong></div>
-          <div className="topbar-right"><span className="demo-pill"><span className="demo-dot" /> Demo workspace</span><CircleHelp size={17} aria-label="Help" /></div>
+          <div className="crumb"><span>Panel sprzedawcy</span><ChevronRight size={13} /><strong>{step === 'catalog' ? view === 'products' ? 'Produkty' : 'Historia promocji' : step === 'package' ? 'Promuj produkt' : step === 'performance' ? 'Wyniki promocji' : 'Promocja potwierdzona'}</strong></div>
+          <div className="topbar-right"><span className="demo-pill"><span className="demo-dot" /> Środowisko demo</span><CircleHelp size={17} aria-label="Pomoc" /></div>
         </header>
         <div className="content">
           {step === 'catalog' && view === 'products' && (
             <>
               <section className="intro">
-                <div><p className="eyebrow"><span className="eyebrow-line" /> Sponsored listings</p><h1>Put your best pieces in the right place.</h1><p className="intro-copy">Give a product a short visibility boost in search. Pick an item, see its potential position, and make a clear decision.</p></div>
-                <div className="stat-strip"><div className="stat"><span className="stat-value">{products.length}</span><span className="stat-label">Active products</span></div><div className="stat"><span className="stat-value">{events.length}</span><span className="stat-label">Promotions run</span></div></div>
+                <div><p className="eyebrow"><span className="eyebrow-line" /> Promowane oferty</p><h1>Umieść swoje produkty tam, gdzie je widać.</h1><p className="intro-copy">Zwiększ widoczność produktu w wynikach wyszukiwania. Wybierz produkt, sprawdź możliwą pozycję i podejmij decyzję.</p></div>
+                <div className="stat-strip"><div className="stat"><span className="stat-value">{products.filter((product) => !purchasedIds.has(product.name)).length}</span><span className="stat-label">Aktywne produkty</span></div><div className="stat"><span className="stat-value">{products.filter((product) => purchasedIds.has(product.name)).length}</span><span className="stat-label">Promowane produkty</span></div></div>
               </section>
-              <div className="section-head"><h2>Your product list</h2><span>Search positions refresh daily</span></div>
-              <div className="product-grid">{products.map((product) => <ProductCard key={product.id} product={product} hasPromotion={purchasedIds.has(product.name)} onPromote={beginPromotion} />)}</div>
-              <p className="disclosure"><Info size={14} /> Sponsored listings are a demo experience. No payment is collected and no live ranking is changed.</p>
+              <div className="section-head"><h2>Lista produktów</h2><span>Pozycje odświeżają się codziennie</span></div>
+              <div className="product-tabs" role="tablist" aria-label="Widok produktów">
+                <button className={productTab === 'active' ? 'active' : ''} onClick={() => setProductTab('active')} role="tab" aria-selected={productTab === 'active'}>Aktywne produkty <span>{products.filter((product) => !purchasedIds.has(product.name)).length}</span></button>
+                <button className={productTab === 'promoted' ? 'active' : ''} onClick={() => setProductTab('promoted')} role="tab" aria-selected={productTab === 'promoted'}>Promowane produkty <span>{products.filter((product) => purchasedIds.has(product.name)).length}</span></button>
+              </div>
+              {productTab === 'active' && <div className="product-grid">{products.filter((product) => !purchasedIds.has(product.name)).map((product) => <ProductCard key={product.id} product={product} hasPromotion={false} onPromote={beginPromotion} />)}</div>}
+              {productTab === 'promoted' && <div className="product-grid">{products.filter((product) => purchasedIds.has(product.name)).map((product) => <ProductCard key={product.id} product={product} hasPromotion onPromote={beginPromotion} onViewPerformance={openPerformance} />)}</div>}
+              {productTab === 'promoted' && products.every((product) => !purchasedIds.has(product.name)) && <div className="tab-empty"><TrendingUp size={23} /><strong>Nie masz jeszcze promowanych produktów</strong><p>Wybierz produkt z zakładki aktywnych, aby zobaczyć jego potencjał.</p><button className="btn-arrow" onClick={() => setProductTab('active')}>Przejdź do aktywnych produktów <ArrowRight size={15} /></button></div>}
+              <p className="disclosure"><Info size={14} /> To jest symulacja — żadna płatność nie została pobrana, a rzeczywisty ranking się nie zmienił.</p>
             </>
           )}
           {step === 'catalog' && view === 'history' && <HistoryView events={events} onNewPromotion={() => { setView('products'); setStep('catalog'); }} />}
           {step === 'package' && selectedProduct && <PromotionFlow product={selectedProduct} selectedPackage={selectedPackage} setSelectedPackage={setSelectedPackage} simulatedPosition={simulatedPosition} onBack={goCatalog} onPurchase={purchase} isSaving={isSaving} />}
           {step === 'confirmation' && selectedProduct && <Confirmation product={selectedProduct} selectedPackage={selectedPackage} simulatedPosition={simulatedPosition} onDone={goCatalog} onHistory={() => { setView('history'); setStep('catalog'); setSelectedProduct(null); }} />}
+          {step === 'performance' && selectedProduct && <PerformanceView product={selectedProduct} event={events.find((item) => item.product === selectedProduct.name)} onBack={goCatalog} onPromoteAgain={beginPromotion} />}
         </div>
       </main>
     </div>
   );
 }
 
-function ProductCard({ product, hasPromotion, onPromote }: { product: Product; hasPromotion: boolean; onPromote: (product: Product) => void }) {
-  return <article className="product-card" data-testid={`card-product-${product.id}`}>
-    <div className={`product-art art-${product.art}`}><span className="art-label">Live listing</span></div>
-    <div className="product-info"><span className="product-meta">{product.category}</span><h3>{product.name}</h3><p className="product-detail">{product.detail}</p><div className="position-row"><div><span className="position-label">Current position</span><div className="position-number">#{product.position}<small> / 100</small></div></div><button className="btn-arrow" onClick={() => onPromote(product)} data-testid={`button-promote-${product.id}`}>{hasPromotion ? 'Promuj ponownie' : 'Promuj'} <ArrowRight size={15} /></button></div></div>
+function ProductCard({ product, hasPromotion, onPromote, onViewPerformance }: { product: Product; hasPromotion: boolean; onPromote: (product: Product) => void; onViewPerformance?: (product: Product) => void }) {
+  const open = () => hasPromotion && onViewPerformance?.(product);
+  return <article className={`product-card ${hasPromotion ? 'promoted-card' : ''}`} data-testid={`card-product-${product.id}`} onClick={open} onKeyDown={(event) => { if (hasPromotion && (event.key === 'Enter' || event.key === ' ')) { event.preventDefault(); open(); } }} tabIndex={hasPromotion ? 0 : undefined} role={hasPromotion ? 'button' : undefined}>
+    <div className={`product-art art-${product.art}`}><span className="art-label">Aktywna oferta</span></div>
+    <div className="product-info"><span className="product-meta">{product.category}</span><h3>{product.name}</h3><p className="product-detail">{product.detail}</p>{hasPromotion && <span className="promoted-label"><TrendingUp size={12} /> Promowany produkt</span>}<div className="position-row"><div><span className="position-label">Aktualna pozycja</span><div className="position-number">#{product.position}<small> / 100</small></div></div><button className="btn-arrow" onClick={(event) => { event.stopPropagation(); onPromote(product); }} data-testid={`button-promote-${product.id}`}>{hasPromotion ? 'Promuj ponownie' : 'Promuj'} <ArrowRight size={15} /></button></div>{hasPromotion && <div className="performance-hint"><Eye size={13} /> Kliknij kartę, aby zobaczyć wyniki</div>}</div>
   </article>;
 }
 
@@ -129,11 +139,16 @@ function PromotionFlow({ product, selectedPackage, setSelectedPackage, simulated
 }
 
 function Confirmation({ product, selectedPackage, simulatedPosition, onDone, onHistory }: { product: Product; selectedPackage: Package; simulatedPosition: number; onDone: () => void; onHistory: () => void }) {
-  return <section className="confirmation"><div className="confirm-mark"><Check size={30} strokeWidth={3} /></div><p className="eyebrow" style={{ justifyContent: 'center' }}><span className="eyebrow-line" /> Promotion booked <span className="eyebrow-line" /></p><h1>{product.name} is ready for more eyes.</h1><p>Your demo promotion has been saved. It will run for {selectedPackage.days} days, with a simulated move from #{product.position} to #{simulatedPosition}.</p><div className="receipt"><div className="receipt-line"><span>Product</span><strong>{product.name}</strong></div><div className="receipt-line"><span>Package</span><strong>{selectedPackage.days} days</strong></div><div className="receipt-line"><span>Simulated position</span><strong>#{product.position} → #{simulatedPosition}</strong></div><div className="receipt-line"><span>Demo total</span><strong>{selectedPackage.price} PLN</strong></div></div><div className="confirm-actions"><button className="btn-ghost" onClick={onHistory} data-testid="button-view-history">View promotion history</button><button className="btn-primary" onClick={onDone} data-testid="button-back-product-list">Back to product list <ArrowRight size={15} /></button></div><p className="disclosure"><Info size={14} /> This is a simulated purchase for research. No money changed hands and no live FashionHero position was altered.</p></section>;
+  return <section className="confirmation"><div className="confirm-mark"><Check size={30} strokeWidth={3} /></div><p className="eyebrow" style={{ justifyContent: 'center' }}><span className="eyebrow-line" /> Promocja aktywna (demo) <span className="eyebrow-line" /></p><h1>{product.name} jest teraz lepiej widoczny.</h1><p>Twoja demonstracyjna promocja została zapisana. Będzie aktywna przez {selectedPackage.days} dni, a symulowana zmiana pozycji to #{product.position} → #{simulatedPosition}.</p><div className="receipt"><div className="receipt-line"><span>Produkt</span><strong>{product.name}</strong></div><div className="receipt-line"><span>Pakiet</span><strong>{selectedPackage.days} dni</strong></div><div className="receipt-line"><span>Symulowana pozycja</span><strong>#{product.position} → #{simulatedPosition}</strong></div><div className="receipt-line"><span>Wartość demo</span><strong>{selectedPackage.price} zł</strong></div></div><div className="confirm-actions"><button className="btn-ghost" onClick={onHistory} data-testid="button-view-history">Zobacz historię promocji</button><button className="btn-primary" onClick={onDone} data-testid="button-back-product-list">Wróć do listy produktów <ArrowRight size={15} /></button></div><p className="disclosure"><Info size={14} /> To zakup demonstracyjny do celów badawczych. Żadne środki nie zostały pobrane, a rzeczywista pozycja FashionHero się nie zmieniła.</p></section>;
+}
+
+function PerformanceView({ product, event, onBack, onPromoteAgain }: { product: Product; event?: PromotionEvent; onBack: () => void; onPromoteAgain: (product: Product) => void }) {
+  if (!event) return null;
+  return <section className="flow-wrap performance-view"><div className="flow-top"><button className="back-button" onClick={onBack}><ArrowLeft size={15} /> Wróć do produktów</button><ChevronRight size={14} color="hsl(218 17% 46%)" /><h1>Wyniki promocji</h1></div><div className="performance-header"><div><p className="eyebrow"><span className="eyebrow-line" /> Raport promowanego produktu</p><h2>{product.name}</h2><p>Podsumowanie efektu wybranego pakietu widoczności.</p></div><span className="active-badge"><Check size={13} /> Promocja aktywna (demo)</span></div><div className="performance-grid"><div className="result-card result-primary"><span className="result-label">Zmiana pozycji w wynikach</span><div className="result-movement"><strong>#{product.position}</strong><ArrowRight size={24} /><strong>#{event.simulatedNewPosition}</strong></div><p>Symulowany wynik po włączeniu promocji</p></div><div className="result-card"><span className="result-label">Wybrany pakiet</span><strong className="result-value">{event.package} dni</strong><p>Promocja została uruchomiona {new Date(event.timestamp).toLocaleDateString('pl-PL')}</p></div><div className="result-card"><span className="result-label">Widoczność</span><strong className="result-value result-green"><TrendingUp size={22} /> Wyższa</strong><p>Produkt jest oznaczony jako promowany</p></div></div><div className="performance-note"><Eye size={18} /><div><strong>Co oznacza ten wynik?</strong><p>Pozycja po promocji jest symulacją do celów badawczych. Nie wpływa na rzeczywiste wyniki wyszukiwania FashionHero.</p></div></div><div className="performance-actions"><button className="btn-ghost" onClick={onBack}>Wróć do listy</button><button className="btn-primary" onClick={() => onPromoteAgain(product)}>Promuj ponownie <ArrowRight size={15} /></button></div><p className="disclosure"><Info size={14} /> Symulacja — żadna płatność nie została pobrana.</p></section>;
 }
 
 function HistoryView({ events, onNewPromotion }: { events: PromotionEvent[]; onNewPromotion: () => void }) {
-  return <section className="flow-wrap"><div className="intro"><div><p className="eyebrow"><span className="eyebrow-line" /> Activity log</p><h1>Promotion history.</h1><p className="intro-copy">A simple record of the visibility decisions you have explored in this demo.</p></div><button className="btn-primary" onClick={onNewPromotion} data-testid="button-new-promotion"><Megaphone size={15} /> New promotion</button></div><div className="section-head"><h2>Saved promotions</h2><span>{events.length} {events.length === 1 ? 'entry' : 'entries'}</span></div><div className="history-panel">{events.length === 0 ? <div className="empty-history"><PackageCheck size={24} color="hsl(48 79% 45%)" /><p>No promotions yet. Choose a product to see your first simulated result.</p><button className="btn-arrow" onClick={onNewPromotion} data-testid="button-empty-new-promotion">Browse products <ArrowRight size={15} /></button></div> : <><div className="history-row header"><span>Product</span><span>Package</span><span>Movement</span><span>Date</span><span>Status</span></div>{events.map((event, index) => <div className="history-row" key={`${event.timestamp}-${index}`} data-testid={`row-promotion-${index}`}><div className="history-product"><span className={`mini-art ${products.find((product) => product.name === event.product)?.art ?? 'one'}`} />{event.product}</div><strong>{event.package} days</strong><span className="move-up">#{event.simulatedNewPosition}</span><span>{new Date(event.timestamp).toLocaleDateString('en-GB')}</span><span className="history-status"><Check size={13} /> Purchased</span></div>)}</>}</div><p className="disclosure"><Info size={14} /> Demo records live only in this browser via localStorage. They are not sent to FashionHero.</p></section>;
+  return <section className="flow-wrap"><div className="intro"><div><p className="eyebrow"><span className="eyebrow-line" /> Historia działań</p><h1>Historia promocji.</h1><p className="intro-copy">Tutaj znajdziesz zapis decyzji dotyczących widoczności produktów w tej demonstracji.</p></div><button className="btn-primary" onClick={onNewPromotion} data-testid="button-new-promotion"><Megaphone size={15} /> Nowa promocja</button></div><div className="section-head"><h2>Zapisane promocje</h2><span>{events.length} {events.length === 1 ? 'wpis' : 'wpisów'}</span></div><div className="history-panel">{events.length === 0 ? <div className="empty-history"><PackageCheck size={24} color="hsl(48 79% 45%)" /><p>Nie ma jeszcze promocji. Wybierz produkt, aby zobaczyć pierwszy symulowany efekt.</p><button className="btn-arrow" onClick={onNewPromotion} data-testid="button-empty-new-promotion">Przeglądaj produkty <ArrowRight size={15} /></button></div> : <><div className="history-row header"><span>Produkt</span><span>Pakiet</span><span>Zmiana</span><span>Data</span><span>Status</span></div>{events.map((event, index) => <div className="history-row" key={`${event.timestamp}-${index}`} data-testid={`row-promotion-${index}`}><div className="history-product"><span className={`mini-art ${products.find((product) => product.name === event.product)?.art ?? 'one'}`} />{event.product}</div><strong>{event.package} dni</strong><span className="move-up">#{event.simulatedNewPosition}</span><span>{new Date(event.timestamp).toLocaleDateString('pl-PL')}</span><span className="history-status"><Check size={13} /> Kupiono</span></div>)}</>}</div><p className="disclosure"><Info size={14} /> Dane demonstracyjne są przechowywane tylko w tej przeglądarce. Nie są wysyłane do FashionHero.</p></section>;
 }
 
 export default App;
