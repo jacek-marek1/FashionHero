@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "FashionHero Sponsored Listings"
+description = "Clickable B2B seller prototype for testing paid product visibility boosts in search results, with simulated ranking changes and purchase event tracking."
+version = "1.0.0"
+id = "artifacts/fashionhero-sponsored-listings"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22149
+
+[services.development]
+run = "pnpm --filter @workspace/fashionhero-sponsored-listings run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/fashionhero-sponsored-listings", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/fashionhero-sponsored-listings/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22149"
+BASE_PATH = "/"

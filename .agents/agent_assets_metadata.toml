@@ -1,0 +1,16 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "hh3d0yB-E1AWztL3e8syV"
+uri = "file://.conversation/FASHIONHERO_SPONSORED_LISTINGS_PROJECT_CONFIG.md"
+type = "text"
+title = "FashionHero Sponsored Listings — Project Config"
+description = "Saved project configuration covering the prototype goal, design rules, domain model, and implementation boundaries."
+logical_id = "9827c638-6328-4f87-8af5-f24a18a93489"
+content_hash = "sha256:f7466cffededf6912f5b7098f6516a8679fa9d93283fb4f2ad0a165a0dd8ba23"
+size = 1754
+mtime_ms = 1787409510759
+storage_uri = "gcs://replit-rams-assets-riker/rams/assets/conversation:241404a0-e8cb-46af-a88f-d295d11d3d1b/9827c638-6328-4f87-8af5-f24a18a93489/db3cabed-4726-4772-9af5-edee42092c8d"
+storage_version_token = "1787409513996711"
+content_type = "text/markdown"
