@@ -172,6 +172,8 @@ h1 { font-size: clamp(31px, 4vw, 50px); line-height: 1.02; letter-spacing: -2.5p
 .btn-ghost:hover { background: hsl(var(--secondary)); color: hsl(var(--foreground)); }
 .btn-arrow { margin-top: 15px; align-self: flex-start; color: hsl(var(--primary)); background: transparent; padding: 0; }
 .btn-arrow:hover { color: hsl(48 79% 35%); transform: translateX(3px); }
+.promote-button { margin-top: 0; align-self: center; min-height: 36px; padding: 0 12px; border: 1px solid hsl(var(--border)); border-radius: 8px; background: hsl(var(--card)); color: hsl(var(--foreground)); }
+.promote-button:hover { border-color: hsl(var(--accent)); background: hsl(var(--accent) / .12); color: hsl(var(--foreground)); transform: translateY(-1px); }
 .history-panel { border: 1px solid hsl(var(--border)); background: hsl(var(--card)); border-radius: var(--radius); overflow: hidden; }
 .history-row { display: grid; grid-template-columns: 1.5fr .7fr .7fr .9fr .65fr; align-items: center; gap: 16px; padding: 17px 20px; border-bottom: 1px solid hsl(var(--border)); font-size: 12px; }
 .history-row:last-child { border-bottom: 0; }.history-row.header { background: hsl(var(--secondary)); color: hsl(var(--muted-foreground)); font-size: 10px; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; }
